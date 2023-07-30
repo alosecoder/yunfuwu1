@@ -1,7 +1,7 @@
-FROM alpine
+FROM debian
 
-RUN apk update && \
-    apk add --no-cache sudo qemu-system-x86_64 xz dbus-x11 curl firefox-esr mate-system-monitor git xfce4 xfce4-terminal tightvncserver wget openssh iproute2
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y sudo qemu-kvm *zenhei* xz-utils dbus-x11 curl firefox-esr gnome-system-monitor mate-system-monitor git xfce4 xfce4-terminal tightvncserver wget openssh-server
 
 RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.2.0.tar.gz && \
     curl -LO https://proot.gitlab.io/proot/bin/proot && \
@@ -9,7 +9,7 @@ RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.2.0.tar.gz && \
     mv proot /bin && \
     tar -xvf v1.2.0.tar.gz
 
-RUN adduser -D -s /bin/bash -G wheel luo && \
+RUN useradd -m -s /bin/bash -G sudo luo && \
     echo 'luo:password' | chpasswd
 
 RUN mkdir $HOME/.vnc && \
@@ -24,9 +24,9 @@ RUN mkdir $HOME/.vnc && \
 
 RUN echo "luo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-RUN sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 
 EXPOSE 22 8900
 
-CMD ["/bin/sh", "-c", "service ssh start && /bin/sh /luo.sh"]
+CMD ["/bin/bash", "-c", "service ssh start && /bin/bash /luo.sh"]
