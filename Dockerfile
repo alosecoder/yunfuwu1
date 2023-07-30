@@ -1,7 +1,7 @@
 FROM alpine
 
 RUN apk update && \
-    apk add --no-cache sudo qemu-system-x86_64 xz dbus-x11 curl firefox-esr mate-system-monitor git xfce4 xfce4-terminal wget openssh iproute2
+    apk add --no-cache sudo qemu-system-x86_64 xz dbus-x11 curl firefox-esr mate-system-monitor git xfce4 xfce4-terminal tightvncserver wget openssh iproute2
 
 RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.2.0.tar.gz && \
     curl -LO https://proot.gitlab.io/proot/bin/proot && \
